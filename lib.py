@@ -115,17 +115,17 @@ def choose_best_split_point(
 
 def plot(sizes_all, sizes_lt_split, sizes_geq_split, model, title=None):
     plt.plot(sizes_all, label="all", color="b")
-    plt.plot(sizes_lt_split, label="delta_t < split_point", color="g")
-    plt.plot(sizes_geq_split, label="delta_t >= split_point", color="r")
+    plt.plot(sizes_lt_split, label=r"$\Delta t$ < split_point", color="g")
+    plt.plot(sizes_geq_split, label=r"$\Delta t$ >= split_point", color="r")
 
-    plt.axhline(y=model[1][0], color='b', linestyle='--')
-    plt.axhline(y=model[1][1], color='b', linestyle='--')
-
-    plt.axhline(y=model[2][0], color='g', linestyle='--')
-    plt.axhline(y=model[2][1], color='g', linestyle='--')
-
-    plt.axhline(y=model[3][0], color='r', linestyle='--')
-    plt.axhline(y=model[3][1], color='r', linestyle='--')
+#    plt.axhline(y=model[1][0], color='b', linestyle='--')
+#    plt.axhline(y=model[1][1], color='b', linestyle='--')
+#
+#    plt.axhline(y=model[2][0], color='g', linestyle='--')
+#    plt.axhline(y=model[2][1], color='g', linestyle='--')
+#
+#    plt.axhline(y=model[3][0], color='r', linestyle='--')
+#    plt.axhline(y=model[3][1], color='r', linestyle='--')
 
     if title:
         plt.title(title)

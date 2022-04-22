@@ -159,7 +159,7 @@ plot(
     master['best_split_sizes']['lt_split'],
     master['best_split_sizes']['geq_split'],
     master_final_tuple,
-    "Master-To-Slave"
+    #"from-master"
     )
 plt.show()
 plt.clf()
@@ -168,6 +168,6 @@ plot(
     slave['best_split_sizes']['lt_split'],
     slave['best_split_sizes']['geq_split'],
     slave_final_tuple,
-    "Slave-To-Master"
+    #"to-master"
     )
 plt.show()
