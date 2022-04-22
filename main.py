@@ -153,11 +153,18 @@ def save_csv_data(input: str, output_master: str, output_slave: str):
         for pkt in slave_raw:
             f.write(str(float(pkt.time - pkts[0].time)) + '\n')
 
-def load_csv_data(input_master, input_slave):
+def load_csv_data(input_master, input_slave, proportion = 1.0):
+    """Load `len(input) * proportion` number of items from csvs `input_master` and `input_slave`."""
+    if proportion > 1.0:
+        proportion = 1.0
+    if proportion < 0.0:
+        proportion = 0.0
+
     master = np.loadtxt(input_master)
     slave = np.loadtxt(input_slave)
 
-    return (master, slave)
+    return (master[0:(int(len(master) * proportion))],
+            slave[0:(int(len(slave) * proportion))])
 
 #-#-#-#-#-#-#-#-#-#-#
  #        MAIN       #
@@ -183,7 +190,7 @@ slave = {}
 
 ######      ######
 # Get the times of packets relative to the start of the communication
-master['times'], slave['times'] = load_csv_data(args.a[0], args.a[1])
+master['times'], slave['times'] = load_csv_data(args.a[0], args.a[1], 0.66)
 
 ######      ######
 # Get 5 minute windows
