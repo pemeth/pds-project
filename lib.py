@@ -1,3 +1,6 @@
+# Author : Patrik Nemeth (xnemet04)
+# Email  : xnemet04@stud.fit.vutbr.cz
+
 import numpy as np
 from scapy.all import *
 from scapy.layers.inet import TCP

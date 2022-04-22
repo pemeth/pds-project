@@ -1,3 +1,6 @@
+# Author : Patrik Nemeth (xnemet04)
+# Email  : xnemet04@stud.fit.vutbr.cz
+
 import pickle
 import numpy as np
 
