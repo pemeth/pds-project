@@ -137,9 +137,8 @@ def save_csv_data(input: str, output_master: str, output_slave: str):
     pkts = rdpcap(input)
     print("pcap file loaded...")
 
-    # TODO this might be flipped - figure it out
-    master_raw = pkts.filter(lambda p: TCP in p and p[TCP].sport == 61254)
-    slave_raw = pkts.filter(lambda p: TCP in p and p[TCP].sport == 2404)
+    master_raw = pkts.filter(lambda p: TCP in p and p[TCP].sport == 2404)
+    slave_raw = pkts.filter(lambda p: TCP in p and p[TCP].sport == 61254)
     print("data split to master/slave...")
 
     with open(output_master, "w") as f:
