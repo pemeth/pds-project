@@ -1,3 +1,4 @@
+import argparse
 from cgitb import small
 import numpy as np
 from scapy.all import *
@@ -133,31 +134,55 @@ def plot(sizes_all, sizes_lt_split, sizes_geq_split, model, title=None):
 
     plt.legend()
 
+def save_csv_data(input: str, output_master: str, output_slave: str):
+    """Load pcap data from `input` and save 0-based times to outputs."""
+    pkts = rdpcap(input)
+    print("pcap file loaded...")
+
+    # TODO this might be flipped - figure it out
+    master_raw = pkts.filter(lambda p: TCP in p and p[TCP].sport == 61254)
+    slave_raw = pkts.filter(lambda p: TCP in p and p[TCP].sport == 2404)
+    print("data split to master/slave...")
+
+    with open(output_master, "w") as f:
+        for pkt in master_raw:
+            f.write(str(float(pkt.time - pkts[0].time)) + '\n')
+
+    with open(output_slave, "w") as f:
+        for pkt in slave_raw:
+            f.write(str(float(pkt.time - pkts[0].time)) + '\n')
+
+def load_csv_data(input_master, input_slave):
+    master = np.loadtxt(input_master)
+    slave = np.loadtxt(input_slave)
+
+    return (master, slave)
+
+#-#-#-#-#-#-#-#-#-#-#
+ #        MAIN       #
+  #-#-#-#-#-#-#-#-#-#-#
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-s', nargs=1, help="parse an input pcap file and output 2 csv files with time data split between master / slave")
+parser.add_argument('-a', nargs=2, help="analyze and generate a model based on 2 input csv files in the order master slave")
+args = parser.parse_args()
+
 if len(sys.argv) < 2:
-    print("Path to pcap file with iec packets only required")
+    print("Program requires exactly one option.")
+    parser.print_help()
     exit(1)
+
+if args.s:
+    save_csv_data(args.s[0], "master.csv", "slave.csv")
+    exit(0)
+
 
 master = {}
 slave = {}
-pkts = rdpcap(sys.argv[1])
-print("pcap file loaded...")
-
-# TODO this might be flipped - figure it out
-# TODO save this stuff to a CSV as per assignment
-master['raw'] = pkts.filter(lambda p: TCP in p and p[TCP].sport == 61254)
-slave['raw'] = pkts.filter(lambda p: TCP in p and p[TCP].sport == 2404)
-print("data split to master/slave...")
-
-master['times'] = []
-slave['times'] = []
 
 ######      ######
 # Get the times of packets relative to the start of the communication
-for pkt in master['raw']:
-    master['times'].append(float(pkt.time - pkts[0].time))
-for pkt in slave['raw']:
-    slave['times'].append(float(pkt.time - pkts[0].time))
-print("deltas acquired...")
+master['times'], slave['times'] = load_csv_data(args.a[0], args.a[1])
 
 ######      ######
 # Get 5 minute windows
