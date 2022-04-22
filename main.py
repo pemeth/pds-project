@@ -114,7 +114,7 @@ def choose_best_split_point(
 
     return retval
 
-def plot(sizes_all, sizes_lt_split, sizes_geq_split, model):
+def plot(sizes_all, sizes_lt_split, sizes_geq_split, model, title=None):
     plt.plot(sizes_all, label="all", color="b")
     plt.plot(sizes_lt_split, label="delta_t < split_point", color="g")
     plt.plot(sizes_geq_split, label="delta_t >= split_point", color="r")
@@ -128,6 +128,9 @@ def plot(sizes_all, sizes_lt_split, sizes_geq_split, model):
     plt.axhline(y=model[3][0], color='r', linestyle='--')
     plt.axhline(y=model[3][1], color='r', linestyle='--')
 
+    if title:
+        plt.title(title)
+
     plt.legend()
 
 if len(sys.argv) < 2:
@@ -140,6 +143,7 @@ pkts = rdpcap(sys.argv[1])
 print("pcap file loaded...")
 
 # TODO this might be flipped - figure it out
+# TODO save this stuff to a CSV as per assignment
 master['raw'] = pkts.filter(lambda p: TCP in p and p[TCP].sport == 61254)
 slave['raw'] = pkts.filter(lambda p: TCP in p and p[TCP].sport == 2404)
 print("data split to master/slave...")
@@ -275,7 +279,8 @@ plot(
     master['best_split_sizes']['all'],
     master['best_split_sizes']['lt_split'],
     master['best_split_sizes']['geq_split'],
-    master_final_tuple
+    master_final_tuple,
+    "Master-To-Slave"
     )
 plt.show()
 plt.clf()
@@ -283,6 +288,7 @@ plot(
     slave['best_split_sizes']['all'],
     slave['best_split_sizes']['lt_split'],
     slave['best_split_sizes']['geq_split'],
-    slave_final_tuple
+    slave_final_tuple,
+    "Slave-To-Master"
     )
 plt.show()
