@@ -1,6 +1,7 @@
 import argparse
 from cgitb import small
 import numpy as np
+import pickle
 from scapy.all import *
 from scapy.layers.inet import TCP
 import sys
@@ -299,6 +300,12 @@ slave_final_tuple = (
     (slave_lt_split['mean'] - 3 * slave_lt_split['std'], slave_lt_split['mean'] + 3 * slave_lt_split['std']),
     (slave_geq_split['mean'] - 3 * slave_geq_split['std'], slave_geq_split['mean'] + 3 * slave_geq_split['std'])
 )
+
+with open("master_model.pkl", "wb") as f:
+    pickle.dump(master_final_tuple, f)
+
+with open("slave_model.pkl", "wb") as f:
+    pickle.dump(slave_final_tuple, f)
 
 plot(
     master['best_split_sizes']['all'],
